@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <array>  
 
 #define HIGH 1e6
 #define ROBOT_RADIUS 0.137
@@ -22,7 +23,13 @@ struct Cell
  * You can define more members to keep track of whether your cell has been
  * visited, its parent, its cost, etc.
  */
-
+struct CellNode
+{
+    int parent;
+    float distance;
+    bool visited;
+    float score;
+};
 
 struct GridGraph
 {
@@ -32,8 +39,8 @@ struct GridGraph
         origin_x(0),
         origin_y(0),
         meters_per_cell(0),
-        collision_radius(0.15),
-        threshold(-100)  // TODO: Adjust threshold.
+        collision_radius(0.15f),
+        threshold(0)  // TODO: Adjust threshold.
     {
     };
 
@@ -48,10 +55,9 @@ struct GridGraph
 
     std::vector<Cell> visited_cells;        // A list of visited cells. Used for visualization.
 
-    /**
-     * TODO (P3): Define the structures you need to store node data in the graph.
-     * Use the type defined above.
-     */
+    // Node data for each cell
+    std::vector<CellNode> nodes;
+
 };
 
 

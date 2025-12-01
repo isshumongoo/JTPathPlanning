@@ -52,10 +52,74 @@ std::vector<Cell> breadthFirstSearch(GridGraph& graph, const Cell& start, const 
     initGraph(graph);  // Make sure all the node values are reset.
 
     int start_idx = cellToIdx(start.i, start.j, graph);
+    int goal_idx  = cellToIdx(goal.i, goal.j, graph);
 
     /**
      * TODO (P3): Implement BFS.
      */
+
+    // If start or goal is in collision, there is no valid path.
+    if (checkCollision(start_idx, graph) || checkCollision(goal_idx, graph))
+    {
+        return path;  // empty
+    }
+
+    std::queue<int> frontier;
+
+    // Initialize start node
+    graph.nodes[start_idx].visited  = true;
+    graph.nodes[start_idx].distance = 0.0f;
+    graph.nodes[start_idx].parent   = -1;
+
+    frontier.push(start_idx);
+
+    bool found = false;
+
+    while (!frontier.empty())
+    {
+        int current = frontier.front();
+        frontier.pop();
+
+        // Record this visited cell for visualization
+        Cell c = idxToCell(current, graph);
+        graph.visited_cells.push_back(c);
+
+        // Check if we reached the goal
+        if (current == goal_idx)
+        {
+            found = true;
+            break;
+        }
+
+        // Explore neighbors
+        std::vector<int> neighbors = findNeighbors(current, graph);
+        for (int n_idx : neighbors)
+        {
+            // Skip if already visited
+            if (graph.nodes[n_idx].visited)
+            {
+                continue;
+            }
+
+            // Skip if this neighbor would collide with an obstacle
+            if (checkCollision(n_idx, graph))
+            {
+                continue;
+            }
+
+            graph.nodes[n_idx].visited  = true;
+            graph.nodes[n_idx].parent   = current;
+            graph.nodes[n_idx].distance = graph.nodes[current].distance + 1.0f;
+
+            frontier.push(n_idx);
+        }
+    }
+
+    if (found)
+    {
+        // Build the path from goal back to start using parents
+        path = tracePath(goal_idx, graph);
+    }
 
     return path;
 }

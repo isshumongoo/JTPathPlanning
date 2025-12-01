@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include <algorithm>
+#include <array>
 
 #include <path_planning/utils/math_helpers.h>
 #include <path_planning/utils/graph_utils.h>
@@ -87,6 +88,24 @@ void initGraph(GridGraph& graph)
      * odds values. You should use this information to initialize your added
      * values, like the distances and the nodes.
      */
+
+    int num_cells = graph.width * graph.height;
+
+    // Reset node storage
+    graph.nodes.clear();
+    graph.nodes.resize(num_cells);
+
+    for (int idx = 0; idx < num_cells; ++idx)
+    {
+        graph.nodes[idx].parent   = -1;      // no parent yet
+        graph.nodes[idx].distance = HIGH;    // unknown / infinity
+        graph.nodes[idx].visited  = false;   // not visited
+        graph.nodes[idx].score    = HIGH;    // for A*
+    }
+
+    // Clear visited cells used for visualization
+    graph.visited_cells.clear();
+
 }
 
 
@@ -157,6 +176,23 @@ std::vector<int> findNeighbors(int idx, const GridGraph& graph)
      * come in handy.
      */
 
+    Cell c = idxToCell(idx, graph);
+
+    // 4-connected: left, right, up, down
+    const int di[4] = { -1, 1, 0, 0 };
+    const int dj[4] = { 0, 0, -1, 1 };
+
+    for (int k = 0; k < 4; ++k)
+    {
+        int ni = c.i + di[k];
+        int nj = c.j + dj[k];
+
+        if (isCellInBounds(ni, nj, graph))
+        {
+            neighbors.push_back(cellToIdx(ni, nj, graph));
+        }
+    }
+
     return neighbors;
 }
 
@@ -209,7 +245,11 @@ int getParent(int idx, const GridGraph& graph)
     /**
      * TODO (P3): Return the parent of the node at idx.
      */
-    return -1;
+    if (idx < 0 || idx >= static_cast<int>(graph.nodes.size()))
+    {
+        return -1;
+    }
+    return graph.nodes[idx].parent;
 }
 
 
@@ -218,7 +258,11 @@ float getScore(int idx, const GridGraph& graph)
     /**
      * TODO (P3): Return the score of the node at idx.
      */
-    return HIGH;
+    if (idx < 0 || idx >= static_cast<int>(graph.nodes.size()))
+    {
+        return HIGH;
+    }
+    return graph.nodes[idx].score;
 }
 
 

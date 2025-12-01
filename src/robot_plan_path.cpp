@@ -33,6 +33,10 @@ int main(int argc, char const *argv[])
 
     // TODO: Call your distance transform function if using checkCollisionFast().
     // HINT: You may want to set a new value for graph.collision_radius.
+    graph.collision_radius = ROBOT_RADIUS + 3.5f * graph.meters_per_cell;
+
+    distanceTransformEuclidean2D(graph);
+
 
     Cell goal = posToCell(goal_x, goal_y, graph);
 
@@ -50,6 +54,8 @@ int main(int argc, char const *argv[])
 
     std::vector<Cell> path;
     // TODO: Call graph search function and put the result in path.
+    path = breadthFirstSearch(graph, start, goal);
+
 
     robot.drivePath(cellsToPoses(path, graph));
 

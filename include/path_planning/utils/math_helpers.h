@@ -28,9 +28,9 @@ static inline float generateRandomNumber(float low, float high)
  */
 static inline float normalizeAngle(float angle)
 {
-  float result = fmod(angle + M_PI, 2.0 * M_PI);
-  if (result <= 0) return result + M_PI;
-  return result - M_PI;
+  float result = fmod(angle + PI, 2.0 * PI);
+  if (result <= 0) return result + PI;
+  return result - PI;
 }
 
 /**
