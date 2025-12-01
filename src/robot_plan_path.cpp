@@ -33,10 +33,9 @@ int main(int argc, char const *argv[])
 
     // TODO: Call your distance transform function if using checkCollisionFast().
     // HINT: You may want to set a new value for graph.collision_radius.
-    graph.collision_radius = ROBOT_RADIUS + 3.5f * graph.meters_per_cell;
+    graph.collision_radius = ROBOT_RADIUS;
 
     distanceTransformEuclidean2D(graph);
-
 
     Cell goal = posToCell(goal_x, goal_y, graph);
 

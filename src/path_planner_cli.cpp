@@ -61,6 +61,14 @@ int main(int argv, char **argc)
     // Perform the distance transform (optional: to use checkCollisionFast).
     distanceTransformEuclidean2D(graph);
 
+    // DEBUG: print collision status for start and goal
+    int start_idx = cellToIdx(start.i, start.j, graph);
+    int goal_idx  = cellToIdx(goal.i,  goal.j,  graph);
+    std::cerr << "start cell (" << start.i << ", " << start.j << ") collision? "
+            << checkCollision(start_idx, graph) << "\n";
+    std::cerr << "goal  cell (" << goal.i  << ", " << goal.j  << ") collision? "
+            << checkCollision(goal_idx, graph) << "\n";
+
     // Plan a path using the requested algorithm.
     std::vector<Cell> path;
     if (planning_algo == "astar")
